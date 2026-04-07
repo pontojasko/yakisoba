@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/menu/ProductCard";
@@ -60,7 +60,7 @@ export function MenuClient({ products, categories }: MenuClientProps) {
       {/* List */}
       {filtered.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground">
-          <p className="text-4xl mb-3">🍽️</p>
+          <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-20" />
           <p>Nenhum item disponível nesta categoria.</p>
         </div>
       ) : (

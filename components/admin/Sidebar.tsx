@@ -86,6 +86,7 @@ export function Sidebar() {
             <Link
               key={href}
               href={href}
+              prefetch={true}
               onClick={() => {
                 if (isMobile) setIsMobileOpen(false);
               }}
