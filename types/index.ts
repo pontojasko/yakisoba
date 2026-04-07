@@ -4,14 +4,6 @@ export type Category = {
   created_at: string
 }
 
-export type DeliveryArea = {
-  id: string
-  name: string
-  fee_amount: number
-  active: boolean
-  created_at: string
-}
-
 export type ProductOption = {
   id: string
   product_id: string
@@ -37,11 +29,8 @@ export type OrderStatus =
   | 'pending'
   | 'preparing'
   | 'ready'
-  | 'out_for_delivery'
   | 'delivered'
   | 'cancelled'
-
-export type OrderType = 'local' | 'pickup' | 'delivery'
 
 export type PaymentMethod =
   | 'pix'
@@ -64,17 +53,13 @@ export type OrderItem = {
 export type Order = {
   id: string
   status: OrderStatus
-  order_type: OrderType
   customer_name: string
   payment_method: PaymentMethod
-  delivery_area_id: string | null
-  delivery_fee: number
   notes: string | null
   total: number
   created_at: string
   updated_at: string
   items?: OrderItem[]
-  delivery_area?: DeliveryArea
 }
 
 // Cart types (client-side only)

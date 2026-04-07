@@ -32,11 +32,10 @@ export function formatShortDate(dateStr: string): string {
 
 export function orderStatusLabel(status: string): string {
   const map: Record<string, string> = {
-    pending: "Novo/Pendente",
+    pending: "Pendente",
     preparing: "Preparando",
     ready: "Pronto",
-    out_for_delivery: "Saiu pra Entrega",
-    delivered: "Finalizado",
+    delivered: "Entregue",
     cancelled: "Cancelado",
   };
   return map[status] ?? status;
@@ -44,10 +43,9 @@ export function orderStatusLabel(status: string): string {
 
 export function orderStatusColor(status: string): string {
   const map: Record<string, string> = {
-    pending: "bg-blue-100 text-blue-800 border-blue-200",
-    preparing: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    preparing: "bg-blue-100 text-blue-800 border-blue-200",
     ready: "bg-green-100 text-green-800 border-green-200",
-    out_for_delivery: "bg-teal-100 text-teal-800 border-teal-200",
     delivered: "bg-gray-100 text-gray-600 border-gray-200",
     cancelled: "bg-red-100 text-red-700 border-red-200",
   };

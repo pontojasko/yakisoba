@@ -44,18 +44,10 @@ export function useOrders(statuses: OrderStatus[]) {
           queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
 
           if (payload.eventType === "INSERT" && !isFirstLoad.current) {
-            toast.info("🚨 Novo pedido recebido!", {
+            toast.info("🍜 Novo pedido recebido!", {
               description: `Cliente: ${(payload.new as Order).customer_name}`,
-              duration: 10000,
+              duration: 6000,
             });
-            // Try to play sound
-            try {
-              const audio = new Audio("/bell.mp3");
-              audio.volume = 1.0;
-              audio.play().catch(console.error);
-            } catch (e) {
-              console.error("Audio block:", e);
-            }
           }
           isFirstLoad.current = false;
         }

@@ -8,7 +8,6 @@ import {
   UtensilsCrossed,
   History,
   LogOut,
-  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -42,9 +41,9 @@ export function Sidebar() {
           <span className="text-2xl">🍜</span>
           <div>
             <p className="text-sidebar-foreground font-bold text-sm leading-tight">
-              YakiHami Admin
+              Yakisoba PDV
             </p>
-            <p className="text-sidebar-foreground/50 text-xs">Gestão Operacional</p>
+            <p className="text-sidebar-foreground/50 text-xs">Painel Admin</p>
           </div>
         </Link>
       </div>
