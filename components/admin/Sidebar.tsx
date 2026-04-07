@@ -134,10 +134,12 @@ export function Sidebar() {
         </Link>
 
         <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-sidebar-foreground -mr-2">
-              <Menu className="h-6 w-6" />
-            </Button>
+          <SheetTrigger
+            render={
+              <Button variant="ghost" size="icon" className="text-sidebar-foreground -mr-2" />
+            }
+          >
+            <Menu className="h-6 w-6" />
           </SheetTrigger>
           <SheetContent side="left" showCloseButton className="w-[280px] p-0 bg-sidebar flex flex-col border-r-sidebar-border [&>button]:text-sidebar-foreground">
             <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
