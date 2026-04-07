@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -15,8 +16,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/orders", label: "Pedidos", icon: ClipboardList },
+  { href: "/admin", label: "Pedidos", icon: ClipboardList, exact: true },
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/menu", label: "Cardápio", icon: UtensilsCrossed },
   { href: "/admin/history", label: "Histórico", icon: History },
 ];
@@ -37,13 +38,15 @@ export function Sidebar() {
     <aside className="w-60 min-h-screen bg-sidebar flex flex-col shrink-0">
       {/* Logo */}
       <div className="px-5 py-6 border-b border-sidebar-border">
-        <Link href="/admin" className="flex items-center gap-2.5">
-          <span className="text-2xl">🍜</span>
-          <div>
-            <p className="text-sidebar-foreground font-bold text-sm leading-tight">
-              Yakisoba PDV
+        <Link href="/admin" className="flex items-center gap-3">
+          <div className="relative w-9 h-9 shrink-0 drop-shadow-md">
+            <Image src="/logo.png" alt="YakiHami" fill className="object-contain" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sidebar-foreground font-bold text-sm leading-tight truncate">
+              YakiHami PDV
             </p>
-            <p className="text-sidebar-foreground/50 text-xs">Painel Admin</p>
+            <p className="text-sidebar-foreground/50 text-[11px] uppercase tracking-wide mt-0.5">Painel Admin</p>
           </div>
         </Link>
       </div>
