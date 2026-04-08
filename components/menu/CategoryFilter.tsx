@@ -3,7 +3,7 @@
 import { Category } from "@/types";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { CupSoda, UtensilsCrossed, IceCream, Pizza, Coffee, Utensils, LayoutGrid } from "lucide-react";
+import { CupSoda, UtensilsCrossed, IceCream, Pizza, Coffee, Utensils, LayoutGrid, Soup } from "lucide-react";
 
 interface CategoryFilterProps {
   categories: Category[];
@@ -16,7 +16,7 @@ const getCategoryIcon = (name: string) => {
   if (n.includes("bebida") || n.includes("suco") || n.includes("refrigerante")) return CupSoda;
   if (n.includes("sobremesa") || n.includes("doce")) return IceCream;
   if (n.includes("yakisoba") || n.includes("massa") || n.includes("macarrão")) return UtensilsCrossed;
-  if (n.includes("porç") || n.includes("entrada") || n.includes("acompanhamento")) return BowlFood;
+  if (n.includes("porç") || n.includes("entrada") || n.includes("acompanhamento")) return Soup;
   if (n.includes("pizza")) return Pizza;
   if (n.includes("café") || n.includes("cafe")) return Coffee;
   return Utensils;
