@@ -8,6 +8,9 @@ import { revalidatePath } from "next/cache";
 interface PlaceOrderInput {
   customerName: string;
   paymentMethod: string;
+  deliveryMethod: string;
+  deliveryAddress?: string;
+  freightCost?: number;
   notes: string;
   items: CartItem[];
 }
@@ -36,6 +39,8 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
   const parsed = orderSchema.safeParse({
     customer_name: input.customerName,
     payment_method: input.paymentMethod,
+    delivery_method: input.deliveryMethod,
+    delivery_address: input.deliveryAddress,
     notes: input.notes,
   });
 
@@ -112,25 +117,29 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
       });
     }
 
-    const { data: order, error: orderError } = await supabase
+    const orderId = crypto.randomUUID();
+
+    const { error: orderError } = await supabase
       .from("orders")
       .insert({
+        id: orderId,
         customer_name: input.customerName.trim(),
         payment_method: input.paymentMethod,
+        delivery_method: input.deliveryMethod,
+        delivery_address: input.deliveryAddress?.trim() || null,
+        freight_cost: input.freightCost ?? 0,
         notes: input.notes?.trim() || null,
         total,
         status: "pending",
-      })
-      .select("id")
-      .single();
+      });
 
-    if (orderError || !order) {
+    if (orderError) {
       logPlaceOrderError(debugId, "Falha ao criar pedido", orderError);
       return { error: "Erro ao criar pedido. Tente novamente.", debugId };
     }
 
     const orderItems = computedItems.map((item) => ({
-      order_id: order.id,
+      order_id: orderId,
       ...item,
     }));
 
@@ -141,7 +150,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
     if (itemsError) {
       logPlaceOrderError(debugId, "Falha ao registrar itens do pedido", itemsError);
 
-      const { error: rollbackError } = await supabase.from("orders").delete().eq("id", order.id);
+      const { error: rollbackError } = await supabase.from("orders").delete().eq("id", orderId);
       if (rollbackError) {
         logPlaceOrderError(debugId, "Falha no rollback do pedido", rollbackError);
       }
@@ -151,7 +160,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
 
     revalidatePath("/admin");
 
-    return { orderId: order.id };
+    return { orderId };
   } catch (error) {
     logPlaceOrderError(debugId, "Erro inesperado ao finalizar pedido", {
       error,

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Plus, Minus, ShoppingBag, ZoomIn } from "lucide-react";
+import { Plus, Minus, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/useCart";
@@ -31,7 +31,6 @@ export function ProductCard({ product }: ProductCardProps) {
   const [selectedOption, setSelectedOption] = useState<ProductOption | null>(
     product.options && product.options.length > 0 ? product.options[0] : null
   );
-  
   const [zoomOpen, setZoomOpen] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -45,8 +44,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const displayPrice = product.price + (selectedOption?.price_modifier ?? 0);
 
-  // Gatilho visual: Mais Pedido (Exemplo base)
-  const isPopular = product.name.toLowerCase().includes("tradicional") || product.name.toLowerCase().includes("yakisoba") && product.price > 35;
+  const isPopular =
+    product.name.toLowerCase().includes("tradicional") ||
+    (product.name.toLowerCase().includes("yakisoba") && product.price > 35);
 
   function handleAdd() {
     addItem(product, selectedOption);
@@ -63,34 +63,71 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative bg-card rounded-xl overflow-hidden border border-border/60 shadow-sm hover:shadow-md transition-all duration-200 flex flex-row p-2.5 gap-2.5 animate-slide-up">
-        {/* Content Left */}
-        <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex items-start justify-between gap-2">
+      <div className="group relative bg-card rounded-xl overflow-hidden border border-border/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-row h-[110px]">
+        
+        {/* Image — Left, tall */}
+        <div
+          className="relative shrink-0 w-[110px] h-full overflow-hidden bg-muted cursor-pointer group/img"
+          onClick={() => { if (product.image_url) setZoomOpen(true); }}
+        >
+          {product.image_url ? (
+            <>
+              {!imgLoaded && (
+                <div className="absolute inset-0 bg-muted animate-pulse z-0" />
+              )}
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                fill
+                className={`object-cover transition-transform duration-500 group-hover/img:scale-110 ${!imgLoaded ? "opacity-0" : "opacity-100"}`}
+                sizes="110px"
+                onLoad={() => setImgLoaded(true)}
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors flex items-center justify-center">
+                <ZoomIn className="text-white opacity-0 group-hover/img:opacity-100 transition-opacity h-5 w-5 drop-shadow-md" />
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-3xl">🍜</div>
+          )}
+
+          {isPopular && (
+            <div className="absolute top-1.5 left-1.5 z-10">
+              <Badge className="text-[9px] uppercase font-bold px-1.5 py-0 bg-primary text-primary-foreground border-none shadow-sm">
+                🔥 Top
+              </Badge>
+            </div>
+          )}
+
+          {!product.available && (
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20">
+              <Badge variant="secondary" className="text-[10px] font-bold">Esgotado</Badge>
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col justify-between p-3 min-w-0">
+          {/* Top: name + description */}
+          <div className="min-w-0">
             <h3 className="font-bold text-sm text-card-foreground leading-tight truncate">
               {product.name}
             </h3>
-            {isPopular && (
-              <Badge variant="default" className="text-[10px] uppercase font-bold shrink-0 bg-primary/10 text-primary hover:bg-primary/20 border-none">
-                Mais pedido
-              </Badge>
+            {product.description && (
+              <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                {product.description}
+              </p>
             )}
           </div>
-          
-          {product.description && (
-            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 leading-relaxed">
-              {product.description}
-            </p>
-          )}
 
-          {/* Options (if any) */}
+          {/* Options */}
           {hasOptions && (
-            <div className="mt-2">
+            <div className="mt-1">
               <Select
                 value={selectedOption?.id ?? ""}
                 onValueChange={handleOptionChange}
               >
-                <SelectTrigger className="h-7 text-xs w-full bg-muted/40 border-dashed">
+                <SelectTrigger className="h-6 text-[11px] w-full bg-muted/40 border-dashed">
                   <SelectValue placeholder="Escolha uma opção" />
                 </SelectTrigger>
                 <SelectContent>
@@ -110,8 +147,8 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {/* Price & Stepper */}
-          <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+          {/* Bottom: price + stepper */}
+          <div className="flex items-center justify-between gap-1 mt-auto">
             <span className="text-sm font-bold text-primary">
               {formatCurrency(displayPrice)}
             </span>
@@ -119,78 +156,39 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.available && (
               <div className="shrink-0">
                 {cartItem ? (
-                  <div className="flex items-center gap-1 bg-muted/30 rounded-full border border-border/50 p-1">
+                  <div className="flex items-center gap-1 bg-muted/40 rounded-full border border-border/40 p-0.5">
                     <Button
-                      size="icon-sm"
+                      size="icon"
                       variant="ghost"
                       className="rounded-full h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-background"
                       onClick={() =>
-                        updateQuantity(
-                          product.id,
-                          selectedOption?.id ?? null,
-                          cartItem.quantity - 1
-                        )
+                        updateQuantity(product.id, selectedOption?.id ?? null, cartItem.quantity - 1)
                       }
                     >
-                      <Minus className="h-3.5 w-3.5" />
+                      <Minus className="h-3 w-3" />
                     </Button>
                     <span className="w-5 text-center font-bold text-xs tabular-nums">
                       {cartItem.quantity}
                     </span>
                     <Button
-                      size="icon-sm"
+                      size="icon"
                       className="rounded-full h-6 w-6 shadow-sm"
                       onClick={handleAdd}
                     >
-                      <Plus className="h-3.5 w-3.5" />
+                      <Plus className="h-3 w-3" />
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
+                  <button
                     onClick={handleAdd}
-                    className="gap-1 rounded-full px-3 h-7 text-xs font-semibold hover:bg-primary hover:text-primary-foreground border-primary/20 text-primary"
+                    className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-sm hover:bg-primary/90 active:scale-95 transition-all"
                   >
-                    <Plus className="h-3 w-3" />
-                    Adicionar
-                  </Button>
+                    <Plus className="h-4 w-4" />
+                  </button>
                 )}
               </div>
             )}
           </div>
-        </div>
-
-        {/* Image Right Square */}
-        <div className="shrink-0 relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-muted flex items-center justify-center cursor-pointer group/img" onClick={() => { if(product.image_url) setZoomOpen(true) }}>
-          {product.image_url ? (
-            <>
-              {/* Skeleton Screen for fast feeling */}
-              {!imgLoaded && (
-                <div className="absolute inset-0 bg-muted animate-pulse z-0" />
-              )}
-              <Image
-                src={product.image_url}
-                alt={product.name}
-                fill
-                className={`object-cover z-10 transition-transform duration-500 group-hover/img:scale-110 ${!imgLoaded ? 'opacity-0' : 'opacity-100'}`}
-                sizes="(max-width: 640px) 112px, 112px"
-                onLoad={() => setImgLoaded(true)}
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 z-20 transition-colors flex items-center justify-center">
-                <ZoomIn className="text-white opacity-0 group-hover/img:opacity-100 transition-opacity h-5 w-5 drop-shadow-md" />
-              </div>
-            </>
-          ) : (
-            <div className="text-3xl z-10">🍜</div>
-          )}
-          {!product.available && (
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-30">
-              <Badge variant="secondary" className="text-[10px] font-bold px-1.5">
-                Esgotado
-              </Badge>
-            </div>
-          )}
         </div>
       </div>
 
@@ -200,11 +198,11 @@ export function ProductCard({ product }: ProductCardProps) {
           <DialogContent className="max-w-md w-[90vw] p-0 overflow-hidden border-none bg-transparent shadow-none [&>button]:text-white [&>button]:bg-black/50 [&>button]:hover:bg-black/70 [&>button]:p-2 [&>button]:rounded-full [&>button]:-right-2 [&>button]:-top-2">
             <DialogTitle className="sr-only">Zoom {product.name}</DialogTitle>
             <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-black/5 flex items-center justify-center">
-              <Image 
-                src={product.image_url} 
-                alt={product.name} 
-                fill 
-                className="object-contain drop-shadow-2xl" 
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                fill
+                className="object-contain drop-shadow-2xl"
                 sizes="100vw"
               />
             </div>

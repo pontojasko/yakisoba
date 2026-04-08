@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
+  Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/menu", label: "Cardápio", icon: UtensilsCrossed },
   { href: "/admin/history", label: "Histórico", icon: History },
+  { href: "/admin/settings", label: "Configurações", icon: Settings2 },
 ];
 
 export function Sidebar() {

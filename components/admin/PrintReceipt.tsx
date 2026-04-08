@@ -1,15 +1,17 @@
 "use client";
 
-import { useRef } from "react";
 import { Order } from "@/types";
 import { formatCurrency, formatDate, orderStatusLabel } from "@/lib/utils";
-import { paymentMethodLabels } from "@/lib/validations/order";
+import { paymentMethodLabels, deliveryMethodLabels } from "@/lib/validations/order";
 
 interface PrintReceiptProps {
   order: Order;
 }
 
 export function PrintReceipt({ order }: PrintReceiptProps) {
+  const isDelivery = order.delivery_method === "delivery";
+  const subtotal = order.total - (order.freight_cost ?? 0);
+
   return (
     <div
       id="thermal-receipt"
@@ -24,10 +26,10 @@ export function PrintReceipt({ order }: PrintReceiptProps) {
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "8px" }}>
         <p style={{ fontSize: "14pt", fontWeight: "bold", margin: 0 }}>
-          🍜 YAKISOBA
+          🍜 YAKIHAMI
         </p>
         <p style={{ fontSize: "8pt", margin: "2px 0 0" }}>
-          Obrigado pela sua visita!
+          Sabor que vem da chapa!
         </p>
       </div>
 
@@ -50,6 +52,20 @@ export function PrintReceipt({ order }: PrintReceiptProps) {
 
       <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
 
+      {/* Delivery info */}
+      <p style={{ margin: "0 0 2px", fontWeight: "bold" }}>ENTREGA</p>
+      <p style={{ margin: "2px 0" }}>
+        <strong>Tipo:</strong>{" "}
+        {deliveryMethodLabels[order.delivery_method] ?? order.delivery_method}
+      </p>
+      {isDelivery && order.delivery_address && (
+        <p style={{ margin: "2px 0", wordBreak: "break-word" }}>
+          <strong>Endereço:</strong> {order.delivery_address}
+        </p>
+      )}
+
+      <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
+
       {/* Items */}
       <p style={{ margin: "0 0 4px", fontWeight: "bold" }}>ITENS DO PEDIDO</p>
       {order.items?.map((item) => (
@@ -69,7 +85,35 @@ export function PrintReceipt({ order }: PrintReceiptProps) {
 
       <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
 
-      {/* Total */}
+      {/* Subtotal + frete + total */}
+      {isDelivery && (
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "9pt",
+              color: "#444",
+            }}
+          >
+            <span>Subtotal</span>
+            <span>{formatCurrency(subtotal)}</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "9pt",
+              color: "#444",
+              marginBottom: "4px",
+            }}
+          >
+            <span>Frete</span>
+            <span>{formatCurrency(order.freight_cost ?? 0)}</span>
+          </div>
+        </>
+      )}
+
       <div
         style={{
           display: "flex",

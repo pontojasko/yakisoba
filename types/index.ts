@@ -38,6 +38,10 @@ export type PaymentMethod =
   | 'credit'
   | 'cash'
 
+export type DeliveryMethod =
+  | 'pickup'
+  | 'delivery'
+
 export type OrderItem = {
   id: string
   order_id: string
@@ -55,6 +59,9 @@ export type Order = {
   status: OrderStatus
   customer_name: string
   payment_method: PaymentMethod
+  delivery_method: DeliveryMethod
+  delivery_address: string | null
+  freight_cost: number
   notes: string | null
   total: number
   created_at: string

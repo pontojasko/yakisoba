@@ -64,7 +64,7 @@ export function MenuClient({ products, categories }: MenuClientProps) {
           <p>Nenhum item disponível nesta categoria.</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-24">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
