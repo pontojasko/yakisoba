@@ -117,6 +117,25 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
       });
     }
 
+    let finalFreightCost = 0;
+    if (input.deliveryMethod === "delivery") {
+      finalFreightCost = Math.max(0, Number(input.freightCost ?? 0));
+      
+      try {
+        const { getStoreSettings } = await import("@/app/actions/settings");
+        const { calculateFreight } = await import("@/lib/freight");
+        if (input.deliveryAddress) {
+          const settings = await getStoreSettings();
+          const remoteFreight = await calculateFreight(input.deliveryAddress, settings);
+          if (remoteFreight && remoteFreight.freightCost >= 0) {
+            finalFreightCost = remoteFreight.freightCost;
+          }
+        }
+      } catch (e) {
+        // Fail gracefully and use validated client freight
+      }
+    }
+
     const orderId = crypto.randomUUID();
 
     const { error: orderError } = await supabase
@@ -127,7 +146,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderErro
         payment_method: input.paymentMethod,
         delivery_method: input.deliveryMethod,
         delivery_address: input.deliveryAddress?.trim() || null,
-        freight_cost: input.freightCost ?? 0,
+        freight_cost: finalFreightCost,
         notes: input.notes?.trim() || null,
         total,
         status: "pending",

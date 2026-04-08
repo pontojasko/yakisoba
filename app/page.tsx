@@ -64,9 +64,9 @@ export default async function HomePage() {
       </main>
 
       {/* Footer — rich with store info */}
-      <footer className="bg-foreground text-white/90 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <footer className="bg-foreground text-white/90 mt-auto pb-28 sm:pb-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-3 mb-3">
@@ -132,9 +132,13 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Bottom bar */}
           <div className="mt-8 pt-6 border-t border-white/10 text-center text-xs text-white/40">
-            <p>YakiHami &copy; {new Date().getFullYear()} — Todos os direitos reservados</p>
+            <p>
+              YakiHami &copy; {new Date().getFullYear()} — Todos os direitos reservados.
+            </p>
+            <p className="mt-1">
+              Desenvolvido por <a href="https://jasko.dev" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-orange-400 transition-colors underline-offset-4 hover:underline">Heitor Jasko</a>
+            </p>
           </div>
         </div>
       </footer>
