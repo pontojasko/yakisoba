@@ -3,7 +3,7 @@
 import { Category } from "@/types";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { CupSoda, UtensilsCrossed, IceCream, Pizza, BowlFood, Coffee, Utensils, LayoutGrid } from "lucide-react";
+import { CupSoda, UtensilsCrossed, IceCream, Pizza, Coffee, Utensils, LayoutGrid } from "lucide-react";
 
 interface CategoryFilterProps {
   categories: Category[];

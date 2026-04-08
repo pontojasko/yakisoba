@@ -63,11 +63,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative bg-card rounded-xl overflow-hidden border border-border/60 shadow-sm hover:shadow-md transition-all duration-200 flex flex-row p-3 gap-3 animate-slide-up">
+      <div className="group relative bg-card rounded-xl overflow-hidden border border-border/60 shadow-sm hover:shadow-md transition-all duration-200 flex flex-row p-2.5 gap-2.5 animate-slide-up">
         {/* Content Left */}
         <div className="flex-1 flex flex-col min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-bold text-base text-card-foreground leading-tight truncate">
+            <h3 className="font-bold text-sm text-card-foreground leading-tight truncate">
               {product.name}
             </h3>
             {isPopular && (
@@ -78,24 +78,24 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
           
           {product.description && (
-            <p className="text-[13px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 leading-relaxed">
               {product.description}
             </p>
           )}
 
           {/* Options (if any) */}
           {hasOptions && (
-            <div className="mt-2.5">
+            <div className="mt-2">
               <Select
                 value={selectedOption?.id ?? ""}
                 onValueChange={handleOptionChange}
               >
-                <SelectTrigger className="h-8 text-[13px] w-full bg-muted/40 border-dashed">
+                <SelectTrigger className="h-7 text-xs w-full bg-muted/40 border-dashed">
                   <SelectValue placeholder="Escolha uma opção" />
                 </SelectTrigger>
                 <SelectContent>
                   {product.options!.map((opt) => (
-                    <SelectItem key={opt.id} value={opt.id} className="text-[13px]">
+                    <SelectItem key={opt.id} value={opt.id} className="text-xs">
                       {opt.name}
                       {opt.price_modifier !== 0 && (
                         <span className="ml-1 text-muted-foreground">
@@ -111,19 +111,19 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* Price & Stepper */}
-          <div className="flex items-center justify-between gap-3 mt-auto pt-3">
-            <span className="text-[15px] font-bold text-primary">
+          <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+            <span className="text-sm font-bold text-primary">
               {formatCurrency(displayPrice)}
             </span>
 
             {product.available && (
               <div className="shrink-0">
                 {cartItem ? (
-                  <div className="flex items-center gap-1.5 bg-muted/30 rounded-full border border-border/50 p-1">
+                  <div className="flex items-center gap-1 bg-muted/30 rounded-full border border-border/50 p-1">
                     <Button
                       size="icon-sm"
                       variant="ghost"
-                      className="rounded-full h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-background"
+                      className="rounded-full h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-background"
                       onClick={() =>
                         updateQuantity(
                           product.id,
@@ -134,12 +134,12 @@ export function ProductCard({ product }: ProductCardProps) {
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </Button>
-                    <span className="w-5 text-center font-bold text-sm tabular-nums">
+                    <span className="w-5 text-center font-bold text-xs tabular-nums">
                       {cartItem.quantity}
                     </span>
                     <Button
                       size="icon-sm"
-                      className="rounded-full h-7 w-7 shadow-sm"
+                      className="rounded-full h-6 w-6 shadow-sm"
                       onClick={handleAdd}
                     >
                       <Plus className="h-3.5 w-3.5" />
@@ -150,7 +150,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     size="sm"
                     variant="outline"
                     onClick={handleAdd}
-                    className="gap-1.5 rounded-full px-4 h-8 text-[13px] font-semibold hover:bg-primary hover:text-primary-foreground border-primary/20 text-primary"
+                    className="gap-1 rounded-full px-3 h-7 text-xs font-semibold hover:bg-primary hover:text-primary-foreground border-primary/20 text-primary"
                   >
                     <Plus className="h-3 w-3" />
                     Adicionar
@@ -162,7 +162,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Image Right Square */}
-        <div className="shrink-0 relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-muted flex items-center justify-center cursor-pointer group/img" onClick={() => { if(product.image_url) setZoomOpen(true) }}>
+        <div className="shrink-0 relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-muted flex items-center justify-center cursor-pointer group/img" onClick={() => { if(product.image_url) setZoomOpen(true) }}>
           {product.image_url ? (
             <>
               {/* Skeleton Screen for fast feeling */}

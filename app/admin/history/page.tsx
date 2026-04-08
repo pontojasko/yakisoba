@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { Order, OrderStatus } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -25,27 +26,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { queryKeys } from "@/lib/query-keys";
 
 const DONE_STATUSES: OrderStatus[] = ["delivered", "cancelled"];
 
-export default function HistoryPage() {
+async function fetchOrderHistory(): Promise<Order[]> {
   const supabase = createClient();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, items:order_items(*, product:products(*), option:product_options(*))")
+    .in("status", DONE_STATUSES)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return (data ?? []) as Order[];
+}
+
+export default function HistoryPage() {
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  useEffect(() => {
-    supabase
-      .from("orders")
-      .select("*, items:order_items(*, product:products(*), option:product_options(*))")
-      .in("status", DONE_STATUSES)
-      .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        setOrders((data ?? []) as Order[]);
-        setLoading(false);
-      });
-  }, []);
+  const { data: orders = [], isLoading } = useQuery({
+    queryKey: queryKeys.orders.history(),
+    queryFn: fetchOrderHistory,
+    staleTime: 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   const filtered = orders.filter((o) =>
     o.customer_name.toLowerCase().includes(search.toLowerCase())
@@ -86,7 +93,7 @@ export default function HistoryPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
+            {isLoading && orders.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
                   Carregando...
@@ -100,9 +107,8 @@ export default function HistoryPage() {
               </TableRow>
             ) : (
               filtered.map((order) => (
-                <>
+                <Fragment key={order.id}>
                   <TableRow
-                    key={order.id}
                     className="cursor-pointer"
                     onClick={() => setExpanded(expanded === order.id ? null : order.id)}
                   >
@@ -146,7 +152,7 @@ export default function HistoryPage() {
 
                   {/* Expanded row */}
                   {expanded === order.id && (
-                    <TableRow key={`${order.id}-expanded`} className="bg-muted/40">
+                    <TableRow className="bg-muted/40">
                       <TableCell colSpan={5} className="py-3 px-6">
                         <div className="space-y-1">
                           {order.items?.map((item) => (
@@ -165,7 +171,7 @@ export default function HistoryPage() {
                       </TableCell>
                     </TableRow>
                   )}
-                </>
+                </Fragment>
               ))
             )}
           </TableBody>

@@ -57,14 +57,14 @@ export function Sidebar() {
       <div className={cn("py-6 border-b border-sidebar-border relative flex items-center", isCollapsed && !isMobile ? "justify-center px-2" : "px-5")}>
         <Link href="/admin" className="flex items-center gap-3">
           <div className="relative w-9 h-9 shrink-0 drop-shadow-md">
-            <Image src="/logo.png" alt="YakiHami" fill className="object-contain" />
+            <Image src="/logo.png" alt="YakiHami" fill className="object-contain rounded-2xl" />
           </div>
           {(!isCollapsed || isMobile) && (
             <div className="min-w-0">
               <p className="text-sidebar-foreground font-bold text-sm leading-tight truncate">
-                YakiHami PDV
+                YakiHami
               </p>
-              <p className="text-sidebar-foreground/50 text-[11px] uppercase tracking-wide mt-0.5">Painel Admin</p>
+              <p className="text-sidebar-foreground/50 text-[11px] uppercase tracking-wide mt-0.5">Setor do chefe</p>
             </div>
           )}
         </Link>

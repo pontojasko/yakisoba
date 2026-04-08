@@ -2,6 +2,9 @@
 // Ensures consistent cache invalidation across the app
 
 export const queryKeys = {
+  admin: {
+    dashboard: () => ["admin", "dashboard"] as const,
+  },
   products: {
     all: ["products"] as const,
     list: () => ["products", "list"] as const,
