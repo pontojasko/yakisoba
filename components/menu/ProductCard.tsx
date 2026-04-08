@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Plus, Minus, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,11 @@ export function ProductCard({ product }: ProductCardProps) {
   );
   const [zoomOpen, setZoomOpen] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const hasOptions = product.options && product.options.length > 0;
 
@@ -63,11 +68,15 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative bg-card rounded-xl overflow-hidden border border-border/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-row h-[110px]">
+      {/* 
+        Desktop: vertical card (image on top, content below)
+        Mobile: horizontal card (image left, content right)
+      */}
+      <div className="product-card group relative bg-card rounded-xl overflow-hidden border border-border/50 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex flex-row sm:flex-col h-[120px] sm:h-auto">
         
-        {/* Image — Left, tall */}
+        {/* Image */}
         <div
-          className="relative shrink-0 w-[110px] h-full overflow-hidden bg-muted cursor-pointer group/img"
+          className="relative shrink-0 w-[120px] sm:w-full h-full sm:h-0 sm:pb-[65%] overflow-hidden bg-muted cursor-pointer group/img"
           onClick={() => { if (product.image_url) setZoomOpen(true); }}
         >
           {product.image_url ? (
@@ -80,7 +89,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 alt={product.name}
                 fill
                 className={`object-cover transition-transform duration-500 group-hover/img:scale-110 ${!imgLoaded ? "opacity-0" : "opacity-100"}`}
-                sizes="110px"
+                sizes="(max-width: 640px) 120px, (max-width: 1024px) 50vw, 25vw"
                 onLoad={() => setImgLoaded(true)}
               />
               <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors flex items-center justify-center">
@@ -88,11 +97,11 @@ export function ProductCard({ product }: ProductCardProps) {
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-3xl">🍜</div>
+            <div className="w-full h-full sm:absolute sm:inset-0 flex items-center justify-center text-3xl">🍜</div>
           )}
 
           {isPopular && (
-            <div className="absolute top-1.5 left-1.5 z-10">
+            <div className="absolute top-2 left-2 z-10">
               <Badge className="text-[9px] uppercase font-bold px-1.5 py-0 bg-primary text-primary-foreground border-none shadow-sm">
                 🔥 Top
               </Badge>
@@ -107,14 +116,14 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col justify-between p-3 min-w-0">
+        <div className="flex-1 flex flex-col justify-between p-3 sm:p-4 min-w-0">
           {/* Top: name + description */}
           <div className="min-w-0">
-            <h3 className="font-bold text-sm text-card-foreground leading-tight truncate">
+            <h3 className="font-bold text-sm sm:text-base text-card-foreground leading-tight truncate">
               {product.name}
             </h3>
             {product.description && (
-              <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-muted-foreground/70 mt-0.5 sm:mt-1 line-clamp-2 leading-relaxed">
                 {product.description}
               </p>
             )}
@@ -122,12 +131,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
           {/* Options */}
           {hasOptions && (
-            <div className="mt-1">
+            <div className="mt-1 sm:mt-2">
               <Select
                 value={selectedOption?.id ?? ""}
                 onValueChange={handleOptionChange}
               >
-                <SelectTrigger className="h-6 text-[11px] w-full bg-muted/40 border-dashed">
+                <SelectTrigger className="h-6 sm:h-7 text-[11px] w-full bg-muted/40 border-dashed">
                   <SelectValue placeholder="Escolha uma opção" />
                 </SelectTrigger>
                 <SelectContent>
@@ -147,20 +156,20 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {/* Bottom: price + stepper */}
-          <div className="flex items-center justify-between gap-1 mt-auto">
-            <span className="text-sm font-bold text-primary">
+          {/* Bottom: price + action button */}
+          <div className="flex items-center justify-between gap-2 mt-auto pt-1 sm:pt-2">
+            <span className="text-base sm:text-lg font-extrabold text-primary tracking-tight">
               {formatCurrency(displayPrice)}
             </span>
 
             {product.available && (
-              <div className="shrink-0">
-                {cartItem ? (
+              <div className="shrink-0 min-w-[32px]">
+                {mounted && cartItem ? (
                   <div className="flex items-center gap-1 bg-muted/40 rounded-full border border-border/40 p-0.5">
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="rounded-full h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-background"
+                      className="rounded-full h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
                       onClick={() =>
                         updateQuantity(product.id, selectedOption?.id ?? null, cartItem.quantity - 1)
                       }
@@ -172,7 +181,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     </span>
                     <Button
                       size="icon"
-                      className="rounded-full h-6 w-6 shadow-sm"
+                      className="rounded-full h-7 w-7 shadow-sm"
                       onClick={handleAdd}
                     >
                       <Plus className="h-3 w-3" />
@@ -181,7 +190,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 ) : (
                   <button
                     onClick={handleAdd}
-                    className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-sm hover:bg-primary/90 active:scale-95 transition-all"
+                    className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200"
                   >
                     <Plus className="h-4 w-4" />
                   </button>

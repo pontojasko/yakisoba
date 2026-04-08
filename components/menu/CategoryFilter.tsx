@@ -36,8 +36,8 @@ export function CategoryFilter({
           className={cn(
             "p-3 rounded-xl flex items-center justify-center transition-all duration-200 border",
             selected === null
-              ? "bg-primary text-primary-foreground border-primary shadow-sm scale-105"
-              : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+              ? "bg-primary text-primary-foreground border-primary shadow-md scale-105"
+              : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground hover:bg-primary/5 hover:shadow-sm"
           )}
         >
           <LayoutGrid className="w-5 h-5 shrink-0" />
@@ -64,8 +64,8 @@ export function CategoryFilter({
               className={cn(
                 "p-3 rounded-xl flex items-center justify-center transition-all duration-200 border",
                 selected === cat.id
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm scale-105"
-                  : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+                  ? "bg-primary text-primary-foreground border-primary shadow-md scale-105"
+                  : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground hover:bg-primary/5 hover:shadow-sm"
               )}
             >
               <Icon className="w-5 h-5 shrink-0" />

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 
-const inter = Inter({
-  variable: "--font-inter",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
   display: "swap",
 });
@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background">
+    <html lang="pt-BR" className={`${quicksand.variable} h-full antialiased`}>
+      <body className="h-[100dvh] w-screen overflow-hidden flex flex-col bg-background">
         <QueryProvider>
           {children}
         </QueryProvider>
