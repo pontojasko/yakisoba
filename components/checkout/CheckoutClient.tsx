@@ -96,7 +96,7 @@ export function CheckoutClient() {
       setIsCalculatingFreight(true);
       const result = await getFreightEstimate(address);
       setIsCalculatingFreight(false);
-      if ("data" in result) {
+      if ("data" in result && result.data) {
         setFreight(result.data);
       } else {
         setFreight(null);
