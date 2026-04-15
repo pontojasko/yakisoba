@@ -28,7 +28,7 @@ export default async function HomePage() {
   const { products, categories } = await getMenuData();
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div className="flex flex-col min-h-screen">
       {/* Hero Header — compact & fixed */}
       <header className="relative bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 text-white overflow-hidden select-none">
         {/* Subtle pattern overlay */}
@@ -56,8 +56,7 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto w-full flex flex-col scrollbar-hide overscroll-none">
+
         {/* Menu Content */}
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6">
         <MenuClient products={products} categories={categories} />
@@ -142,7 +141,6 @@ export default async function HomePage() {
           </div>
         </div>
       </footer>
-      </div>
     </div>
   );
 }

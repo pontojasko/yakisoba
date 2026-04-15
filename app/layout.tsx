@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${quicksand.variable} h-full antialiased`}>
-      <body className="h-[100dvh] w-screen overflow-hidden flex flex-col bg-background">
+    <html lang="pt-BR" className={`${quicksand.variable} antialiased`}>
+      <body className="min-h-screen bg-background">
         <QueryProvider>
           {children}
         </QueryProvider>
