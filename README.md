@@ -5,7 +5,7 @@
 <h1 align="center">Yakisoba</h1>
 
 <p align="center">
-  A point-of-sale system for a yakisoba restaurant, built for real-world use.
+  A point-of-sale system for restaurants.
 </p>
 
 <p align="center">
