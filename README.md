@@ -20,7 +20,7 @@
 
 ## What is this
 
-Yakisoba is a full-stack ordering system designed for a small yakisoba restaurant. Customers browse the menu on their phone, pick what they want, choose between pickup or delivery, and place their order. On the other side, the kitchen staff sees incoming orders on a kanban board that updates in real time.
+Yakisoba is a full-stack ordering system designed for small restaurants. Customers browse the menu on their phone, pick what they want, choose between pickup or delivery, and place their order. On the other side, the kitchen staff sees incoming orders on a kanban board that updates in real time.
 
 ---
 
