@@ -80,15 +80,14 @@ All tables have Row Level Security enabled. The menu is publicly readable, but o
 
 ## Running locally
 
-You'll need Node 20+ and a Supabase project.
+You'll need Docker, Docker Compose, and a Supabase project.
 
 ```bash
 git clone https://github.com/pontojasko/yakisoba.git
 cd yakisoba
-npm install
 ```
 
-Create `.env.local`:
+Create `.env`:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
@@ -104,13 +103,21 @@ supabase/add_delivery_fields.sql
 supabase/add_store_settings.sql
 ```
 
-Then:
+Then, build and start the container:
 
 ```bash
-npm run dev
+docker compose up -d --build
 ```
 
 Menu lives at `localhost:3000`. Admin dashboard at `localhost:3000/admin`.
+
+### Local Development (without Docker)
+
+If you prefer to run the project directly from the source code, you'll need Node 20+:
+
+1. Install dependencies: `npm install`
+2. Create a `.env.local` file (same variables as above)
+3. Start the dev server: `npm run dev`
 
 ---
 
